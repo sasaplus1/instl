@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
-    "ltsv": "^3.0.0"
+    "ltsv": "^3.0.1"
   },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.8",
