@@ -1,27 +1,11 @@
 {
   "name": "instl",
-  "version": "1.0.0",
   "description": "A CLI tool for installing files with LTSV recipe support",
-  "type": "module",
-  "main": "dist/index.js",
+  "version": "1.0.0",
+  "author": "",
   "bin": {
     "instl": "dist/index.js"
   },
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsx src/index.ts",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:bun": "bun build src/index.ts --compile --outfile dist/instl && vitest run --config vitest.bun.config.ts"
-  },
-  "keywords": [
-    "install",
-    "cli",
-    "ltsv",
-    "file-management"
-  ],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "commander": "^12.1.0",
     "ltsv": "^3.0.0"
@@ -34,5 +18,21 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "keywords": [
+    "cli",
+    "file-management",
+    "install",
+    "ltsv"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:bun": "bun build src/index.ts --compile --outfile dist/instl && vitest run --config vitest.bun.config.ts",
+    "test:watch": "vitest"
+  },
+  "type": "module"
 }
