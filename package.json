@@ -31,8 +31,10 @@
   "scripts": {
     "build": "bun build src/index.ts --outfile dist/index.js --target node --packages external",
     "typecheck": "tsc",
-    "dev": "tsx src/index.ts",
-    "test": "node --test --test-timeout=30000 --import tsx test/e2e/*.test.ts"
+    "dev": "bun src/index.ts",
+    "test": "pnpm run test:node && pnpm run test:bun",
+    "test:bun": "bun test test/e2e/*.test.ts",
+    "test:node": "node --test --test-timeout=30000 --import tsx test/e2e/*.test.ts"
   },
   "type": "module"
 }

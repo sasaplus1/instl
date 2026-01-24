@@ -75,6 +75,7 @@ export function runInstl(args: string, cwd?: string): { stdout: string; stderr: 
     cwd: cwd ?? path.join(__dirname, '..'),
     encoding: 'utf-8',
     stdio: ['pipe', 'pipe', 'pipe'],
+    env: process.env,
   };
 
   try {
