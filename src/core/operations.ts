@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import type { Logger } from '../utils/logger.js';
 import { createBackup } from './backup.js';
-import { setMode, setOwner } from './permissions.js';
+import { setOwner } from './permissions.js';
 
 export interface CopyOptions {
   mode: number;

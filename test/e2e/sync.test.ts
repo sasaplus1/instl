@@ -169,7 +169,7 @@ op:mkdir\tdest:${tempDir}/dir2
     });
 
     it('should resolve relative paths from recipe directory', () => {
-      const src = createTestFile(tempDir, 'src/source.txt', 'content');
+      createTestFile(tempDir, 'src/source.txt', 'content');
       const recipeDir = path.join(tempDir, 'recipes');
       fs.mkdirSync(recipeDir, { recursive: true });
       const recipe = createTestFile(tempDir, 'recipes/recipe.ltsv', `op:cp\tsrc:../src/source.txt\tdest:${tempDir}/dest.txt`);
