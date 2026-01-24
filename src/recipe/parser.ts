@@ -1,19 +1,19 @@
-import * as fs from 'node:fs';
-import { parse as parseLtsv } from 'ltsv';
-import type { RecipeEntry } from '../types/index.js';
-import { validateRecipeEntry, expandEnvVars } from '../utils/validation.js';
+import * as fs from "node:fs";
+import { parse as parseLtsv } from "ltsv";
+import type { RecipeEntry } from "../types/index.js";
+import { expandEnvVars, validateRecipeEntry } from "../utils/validation.js";
 
 export function parseRecipeFile(filePath: string): RecipeEntry[] {
   if (!fs.existsSync(filePath)) {
     throw new Error(`Recipe file not found: ${filePath}`);
   }
 
-  const content = fs.readFileSync(filePath, 'utf-8');
+  const content = fs.readFileSync(filePath, "utf-8");
   return parseRecipeContent(content);
 }
 
 export function parseRecipeContent(content: string): RecipeEntry[] {
-  const lines = content.split('\n');
+  const lines = content.split("\n");
   const entries: RecipeEntry[] = [];
 
   for (const [i, rawLine] of lines.entries()) {
@@ -21,12 +21,12 @@ export function parseRecipeContent(content: string): RecipeEntry[] {
     const lineNumber = i + 1;
 
     // Skip empty lines
-    if (line === '') {
+    if (line === "") {
       continue;
     }
 
     // Skip comment lines
-    if (line.startsWith('#')) {
+    if (line.startsWith("#")) {
       continue;
     }
 

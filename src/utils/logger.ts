@@ -1,4 +1,4 @@
-import type { LogAction, LoggerOptions } from '../types/index.js';
+import type { LogAction, LoggerOptions } from "../types/index.js";
 
 export class Logger {
   private verbose: boolean;
@@ -14,8 +14,10 @@ export class Logger {
       return;
     }
 
-    const prefix = this.dryRun ? '[DRY-RUN]' : `[${action}]`;
-    console.log(`${prefix} ${action === 'COPY' || this.dryRun ? action + ' ' : ''}${message}`);
+    const prefix = this.dryRun ? "[DRY-RUN]" : `[${action}]`;
+    console.log(
+      `${prefix} ${action === "COPY" || this.dryRun ? action + " " : ""}${message}`,
+    );
   }
 
   logAction(action: LogAction, details: string): void {

@@ -1,9 +1,13 @@
-import * as fs from 'node:fs';
-import type { Logger } from '../utils/logger.js';
+import * as fs from "node:fs";
+import type { Logger } from "../utils/logger.js";
 
-const BACKUP_EXTENSION = '.old';
+const BACKUP_EXTENSION = ".old";
 
-export function createBackup(filePath: string, logger: Logger, dryRun: boolean): void {
+export function createBackup(
+  filePath: string,
+  logger: Logger,
+  dryRun: boolean,
+): void {
   const backupPath = filePath + BACKUP_EXTENSION;
 
   if (!fs.existsSync(filePath)) {
@@ -15,7 +19,7 @@ export function createBackup(filePath: string, logger: Logger, dryRun: boolean):
     throw new Error(`Cannot backup directory: ${filePath}`);
   }
 
-  logger.logAction('BACKUP', `${filePath} -> ${backupPath}`);
+  logger.logAction("BACKUP", `${filePath} -> ${backupPath}`);
 
   if (!dryRun) {
     // If backup already exists, it will be overwritten (BSD install behavior)

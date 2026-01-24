@@ -1,17 +1,17 @@
-import * as path from 'node:path';
-import type { Command } from 'commander';
-import type { SyncOptions } from '../types/index.js';
-import { createLogger } from '../utils/logger.js';
-import { parseRecipeFile } from '../recipe/parser.js';
-import { executeRecipe } from '../recipe/executor.js';
+import * as path from "node:path";
+import type { Command } from "commander";
+import { executeRecipe } from "../recipe/executor.js";
+import { parseRecipeFile } from "../recipe/parser.js";
+import type { SyncOptions } from "../types/index.js";
+import { createLogger } from "../utils/logger.js";
 
 export function registerSyncCommand(program: Command): void {
   program
-    .command('sync')
-    .description('Synchronize files according to LTSV recipe file')
-    .argument('<recipe>', 'Path to LTSV recipe file')
-    .option('--verbose', 'Enable verbose output')
-    .option('--dry-run', 'Show what would be done without executing')
+    .command("sync")
+    .description("Synchronize files according to LTSV recipe file")
+    .argument("<recipe>", "Path to LTSV recipe file")
+    .option("--verbose", "Enable verbose output")
+    .option("--dry-run", "Show what would be done without executing")
     .action(executeSync);
 }
 

@@ -1,8 +1,8 @@
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import type { Logger } from '../utils/logger.js';
-import { createBackup } from './backup.js';
-import { setOwner } from './permissions.js';
+import * as fs from "node:fs";
+import * as path from "node:path";
+import type { Logger } from "../utils/logger.js";
+import { createBackup } from "./backup.js";
+import { setOwner } from "./permissions.js";
 
 export interface CopyOptions {
   mode: number;
@@ -36,7 +36,7 @@ export function copyFile(
   src: string,
   dest: string,
   options: CopyOptions,
-  logger: Logger
+  logger: Logger,
 ): void {
   // Check if source exists
   if (!fs.existsSync(src)) {
@@ -61,8 +61,8 @@ export function copyFile(
     createBackup(dest, logger, options.dryRun);
   }
 
-  const modeStr = options.mode.toString(8).padStart(4, '0');
-  logger.logAction('COPY', `${src} -> ${dest} (mode: ${modeStr})`);
+  const modeStr = options.mode.toString(8).padStart(4, "0");
+  logger.logAction("COPY", `${src} -> ${dest} (mode: ${modeStr})`);
 
   if (!options.dryRun) {
     // Ensure parent directory exists
@@ -76,9 +76,15 @@ export function copyFile(
   }
 
   // Set owner/group after copy
-  if (!options.dryRun && (options.owner !== undefined || options.group !== undefined)) {
+  if (
+    !options.dryRun &&
+    (options.owner !== undefined || options.group !== undefined)
+  ) {
     setOwner(dest, options.owner, options.group, logger, options.dryRun);
-  } else if (options.dryRun && (options.owner !== undefined || options.group !== undefined)) {
+  } else if (
+    options.dryRun &&
+    (options.owner !== undefined || options.group !== undefined)
+  ) {
     setOwner(dest, options.owner, options.group, logger, options.dryRun);
   }
 }
@@ -86,19 +92,25 @@ export function copyFile(
 export function makeDirectory(
   dirPath: string,
   options: MkdirOptions,
-  logger: Logger
+  logger: Logger,
 ): void {
-  const modeStr = options.mode.toString(8).padStart(4, '0');
-  logger.logAction('MKDIR', `${dirPath} (mode: ${modeStr})`);
+  const modeStr = options.mode.toString(8).padStart(4, "0");
+  logger.logAction("MKDIR", `${dirPath} (mode: ${modeStr})`);
 
   if (!options.dryRun) {
     fs.mkdirSync(dirPath, { recursive: true, mode: options.mode });
   }
 
   // Set owner/group after mkdir
-  if (!options.dryRun && (options.owner !== undefined || options.group !== undefined)) {
+  if (
+    !options.dryRun &&
+    (options.owner !== undefined || options.group !== undefined)
+  ) {
     setOwner(dirPath, options.owner, options.group, logger, options.dryRun);
-  } else if (options.dryRun && (options.owner !== undefined || options.group !== undefined)) {
+  } else if (
+    options.dryRun &&
+    (options.owner !== undefined || options.group !== undefined)
+  ) {
     setOwner(dirPath, options.owner, options.group, logger, options.dryRun);
   }
 }
@@ -107,7 +119,7 @@ export function createSymlink(
   src: string,
   dest: string,
   options: SymlinkOptions,
-  logger: Logger
+  logger: Logger,
 ): void {
   // Check if dest exists
   if (fs.existsSync(dest) || fs.lstatSync(dest, { throwIfNoEntry: false })) {
@@ -117,13 +129,13 @@ export function createSymlink(
     }
 
     // Remove existing file or symlink
-    logger.logAction('DELETE', dest);
+    logger.logAction("DELETE", dest);
     if (!options.dryRun) {
       fs.unlinkSync(dest);
     }
   }
 
-  logger.logAction('LINK', `${src} -> ${dest}`);
+  logger.logAction("LINK", `${src} -> ${dest}`);
 
   if (!options.dryRun) {
     // Ensure parent directory exists
@@ -136,9 +148,15 @@ export function createSymlink(
   }
 
   // Set owner/group using lchown for symlinks
-  if (!options.dryRun && (options.owner !== undefined || options.group !== undefined)) {
+  if (
+    !options.dryRun &&
+    (options.owner !== undefined || options.group !== undefined)
+  ) {
     setOwner(dest, options.owner, options.group, logger, options.dryRun, true);
-  } else if (options.dryRun && (options.owner !== undefined || options.group !== undefined)) {
+  } else if (
+    options.dryRun &&
+    (options.owner !== undefined || options.group !== undefined)
+  ) {
     setOwner(dest, options.owner, options.group, logger, options.dryRun, true);
   }
 }
@@ -146,16 +164,17 @@ export function createSymlink(
 export function touchFile(
   filePath: string,
   options: TouchOptions,
-  logger: Logger
+  logger: Logger,
 ): void {
   const exists = fs.existsSync(filePath);
 
   if (exists) {
     // Update timestamp
-    const modeInfo = options.mode !== undefined
-      ? ` (mode: ${options.mode.toString(8).padStart(4, '0')})`
-      : '';
-    logger.logAction('TOUCH', `${filePath}${modeInfo}`);
+    const modeInfo =
+      options.mode !== undefined
+        ? ` (mode: ${options.mode.toString(8).padStart(4, "0")})`
+        : "";
+    logger.logAction("TOUCH", `${filePath}${modeInfo}`);
 
     if (!options.dryRun) {
       const now = new Date();
@@ -169,8 +188,8 @@ export function touchFile(
   } else {
     // Create empty file
     const mode = options.mode ?? 0o644;
-    const modeStr = mode.toString(8).padStart(4, '0');
-    logger.logAction('TOUCH', `${filePath} (mode: ${modeStr})`);
+    const modeStr = mode.toString(8).padStart(4, "0");
+    logger.logAction("TOUCH", `${filePath} (mode: ${modeStr})`);
 
     if (!options.dryRun) {
       // Ensure parent directory exists
@@ -179,15 +198,21 @@ export function touchFile(
         fs.mkdirSync(parentDir, { recursive: true, mode: 0o755 });
       }
 
-      fs.writeFileSync(filePath, '');
+      fs.writeFileSync(filePath, "");
       fs.chmodSync(filePath, mode);
     }
   }
 
   // Set owner/group
-  if (!options.dryRun && (options.owner !== undefined || options.group !== undefined)) {
+  if (
+    !options.dryRun &&
+    (options.owner !== undefined || options.group !== undefined)
+  ) {
     setOwner(filePath, options.owner, options.group, logger, options.dryRun);
-  } else if (options.dryRun && (options.owner !== undefined || options.group !== undefined)) {
+  } else if (
+    options.dryRun &&
+    (options.owner !== undefined || options.group !== undefined)
+  ) {
     setOwner(filePath, options.owner, options.group, logger, options.dryRun);
   }
 }

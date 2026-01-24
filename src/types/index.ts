@@ -14,7 +14,7 @@ export interface SyncOptions {
   dryRun: boolean;
 }
 
-export type RecipeOperation = 'touch' | 'mkdir' | 'cp' | 'ln';
+export type RecipeOperation = "touch" | "mkdir" | "cp" | "ln";
 
 export interface RecipeEntry {
   op: RecipeOperation;
@@ -30,4 +30,12 @@ export interface LoggerOptions {
   dryRun: boolean;
 }
 
-export type LogAction = 'COPY' | 'MKDIR' | 'LINK' | 'TOUCH' | 'CHOWN' | 'CHMOD' | 'BACKUP' | 'DELETE';
+export type LogAction =
+  | "COPY"
+  | "MKDIR"
+  | "LINK"
+  | "TOUCH"
+  | "CHOWN"
+  | "CHMOD"
+  | "BACKUP"
+  | "DELETE";
