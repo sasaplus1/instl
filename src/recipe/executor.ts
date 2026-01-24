@@ -50,10 +50,10 @@ function executeEntry(
         throw new Error('ln operation requires src');
       }
       // For ln, src should be relative to dest location if relative
-      const lnSrc = entry.src && !path.isAbsolute(entry.src)
+      const lnSrc = entry.src !== undefined && !path.isAbsolute(entry.src)
         ? entry.src  // Keep relative for symlink target
         : src;
-      executeLnOp(lnSrc!, dest, entry, options, logger);
+      executeLnOp(lnSrc, dest, entry, options, logger);
       break;
     default:
       throw new Error(`Unknown operation: ${entry.op}`);
@@ -66,13 +66,11 @@ function executeTouchOp(
   options: SyncOptions,
   logger: Logger
 ): void {
-  const mode = entry.mode ? parseMode(entry.mode, 0o644) : undefined;
-
   touchFile(dest, {
-    mode,
-    owner: entry.owner,
-    group: entry.group,
-    dryRun: options.dryRun ?? false,
+    dryRun: options.dryRun,
+    ...(entry.mode !== undefined ? { mode: parseMode(entry.mode, 0o644) } : {}),
+    ...(entry.owner !== undefined ? { owner: entry.owner } : {}),
+    ...(entry.group !== undefined ? { group: entry.group } : {}),
   }, logger);
 }
 
@@ -82,13 +80,11 @@ function executeMkdirOp(
   options: SyncOptions,
   logger: Logger
 ): void {
-  const mode = parseMode(entry.mode, 0o755);
-
   makeDirectory(dest, {
-    mode,
-    owner: entry.owner,
-    group: entry.group,
-    dryRun: options.dryRun ?? false,
+    mode: parseMode(entry.mode, 0o755),
+    dryRun: options.dryRun,
+    ...(entry.owner !== undefined ? { owner: entry.owner } : {}),
+    ...(entry.group !== undefined ? { group: entry.group } : {}),
   }, logger);
 }
 
@@ -99,14 +95,12 @@ function executeCpOp(
   options: SyncOptions,
   logger: Logger
 ): void {
-  const mode = parseMode(entry.mode, 0o644);
-
   copyFile(src, dest, {
-    mode,
-    owner: entry.owner,
-    group: entry.group,
-    backup: false, // Recipe doesn't support backup
-    dryRun: options.dryRun ?? false,
+    mode: parseMode(entry.mode, 0o644),
+    backup: false,
+    dryRun: options.dryRun,
+    ...(entry.owner !== undefined ? { owner: entry.owner } : {}),
+    ...(entry.group !== undefined ? { group: entry.group } : {}),
   }, logger);
 }
 
@@ -118,8 +112,8 @@ function executeLnOp(
   logger: Logger
 ): void {
   createSymlink(src, dest, {
-    owner: entry.owner,
-    group: entry.group,
-    dryRun: options.dryRun ?? false,
+    dryRun: options.dryRun,
+    ...(entry.owner !== undefined ? { owner: entry.owner } : {}),
+    ...(entry.group !== undefined ? { group: entry.group } : {}),
   }, logger);
 }

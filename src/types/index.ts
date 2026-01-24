@@ -2,16 +2,16 @@ export interface InstallOptions {
   mode?: string;
   owner?: number;
   group?: number;
-  directory?: boolean;
-  backup?: boolean;
-  symlink?: boolean;
-  verbose?: boolean;
-  dryRun?: boolean;
+  directory: boolean;
+  backup: boolean;
+  symlink: boolean;
+  verbose: boolean;
+  dryRun: boolean;
 }
 
 export interface SyncOptions {
-  verbose?: boolean;
-  dryRun?: boolean;
+  verbose: boolean;
+  dryRun: boolean;
 }
 
 export type RecipeOperation = 'touch' | 'mkdir' | 'cp' | 'ln';

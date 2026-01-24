@@ -41,15 +41,15 @@ interface InstallCliOptions {
 function executeInstall(args: string[], cliOptions: InstallCliOptions): void {
   try {
     const options: InstallOptions = {
-      mode: cliOptions.mode,
-      owner: cliOptions.owner ? validateUid(cliOptions.owner) : undefined,
-      group: cliOptions.group ? validateGid(cliOptions.group) : undefined,
       directory: cliOptions.directory ?? false,
       backup: cliOptions.backup ?? false,
       symlink: cliOptions.symlink ?? false,
       verbose: cliOptions.verbose ?? false,
       dryRun: cliOptions.dryRun ?? false,
     };
+    if (cliOptions.mode !== undefined) options.mode = cliOptions.mode;
+    if (cliOptions.owner !== undefined) options.owner = validateUid(cliOptions.owner);
+    if (cliOptions.group !== undefined) options.group = validateGid(cliOptions.group);
 
     validateInstallOptions(options);
 
@@ -85,9 +85,9 @@ function executeDirectoryMode(
   for (const dir of dirs) {
     makeDirectory(dir, {
       mode,
-      owner: options.owner,
-      group: options.group,
-      dryRun: options.dryRun ?? false,
+      dryRun: options.dryRun,
+      ...(options.owner !== undefined ? { owner: options.owner } : {}),
+      ...(options.group !== undefined ? { group: options.group } : {}),
     }, logger);
   }
 }
@@ -105,12 +105,16 @@ function executeSymlinkMode(
     throw new Error('Symlink mode does not support multiple sources');
   }
 
-  const [src, dest] = args;
+  const src = args[0];
+  const dest = args[1];
+  if (src === undefined || dest === undefined) {
+    throw new Error('Requires SOURCE and DEST arguments');
+  }
 
   createSymlink(src, dest, {
-    owner: options.owner,
-    group: options.group,
-    dryRun: options.dryRun ?? false,
+    dryRun: options.dryRun,
+    ...(options.owner !== undefined ? { owner: options.owner } : {}),
+    ...(options.group !== undefined ? { group: options.group } : {}),
   }, logger);
 }
 
@@ -125,11 +129,17 @@ function executeCopyMode(
 
   const sources = args.slice(0, -1);
   const dest = args[args.length - 1];
+  if (dest === undefined) {
+    throw new Error('Requires SOURCE and DEST arguments');
+  }
   const mode = parseMode(options.mode, 0o644);
 
   if (sources.length === 1) {
     // Single source: copy to dest (file or dir/filename)
     const src = sources[0];
+    if (src === undefined) {
+      throw new Error('Requires SOURCE and DEST arguments');
+    }
     let finalDest = dest;
 
     if (fs.existsSync(dest)) {
@@ -141,10 +151,10 @@ function executeCopyMode(
 
     copyFile(src, finalDest, {
       mode,
-      owner: options.owner,
-      group: options.group,
-      backup: options.backup ?? false,
-      dryRun: options.dryRun ?? false,
+      backup: options.backup,
+      dryRun: options.dryRun,
+      ...(options.owner !== undefined ? { owner: options.owner } : {}),
+      ...(options.group !== undefined ? { group: options.group } : {}),
     }, logger);
   } else {
     // Multiple sources: dest must be existing directory
@@ -161,10 +171,10 @@ function executeCopyMode(
       const finalDest = path.join(dest, path.basename(src));
       copyFile(src, finalDest, {
         mode,
-        owner: options.owner,
-        group: options.group,
-        backup: options.backup ?? false,
-        dryRun: options.dryRun ?? false,
+        backup: options.backup,
+        dryRun: options.dryRun,
+        ...(options.owner !== undefined ? { owner: options.owner } : {}),
+        ...(options.group !== undefined ? { group: options.group } : {}),
       }, logger);
     }
   }
