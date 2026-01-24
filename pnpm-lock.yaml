@@ -12,8 +12,8 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       ltsv:
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^3.0.2
+        version: 3.0.2
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.3.11
@@ -269,8 +269,8 @@ packages:
   get-tsconfig@4.13.0:
     resolution: {integrity: sha512-1VKTZJCwBrvbd+Wn3AOgQP/2Av+TfTCOlE4AcRJE72W1ksZXbAx8PPBR9RzgTeSPzlPMHrbANMH3LbltH73wxQ==}
 
-  ltsv@3.0.1:
-    resolution: {integrity: sha512-epqETumEvLJYNKj7LF0lXmbjcArXXJbdqBFr1r//YsX7Z64GfcIgPW1XljIdnfebxGjpAUUCKEPoATs06ALcpw==}
+  ltsv@3.0.2:
+    resolution: {integrity: sha512-kpuAdLgaciCWMsIYhSDjjRnq8Mbh1ZXQ6EIj8zI7CoaZSKOqjBRPbYy4i/cPGPD7uAn5VtbWTNyDsMk8M+f7+Q==}
     engines: {node: '>=20'}
 
   resolve-pkg-maps@1.0.0:
@@ -448,7 +448,7 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  ltsv@3.0.1: {}
+  ltsv@3.0.2: {}
 
   resolve-pkg-maps@1.0.0: {}
 

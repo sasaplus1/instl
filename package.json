@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
-    "ltsv": "^3.0.1"
+    "ltsv": "^3.0.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.11",
@@ -18,7 +18,7 @@
     "typescript": "^5.7.3"
   },
   "engines": {
-    "node": ">=24.0.0"
+    "node": "24"
   },
   "keywords": [
     "cli",
@@ -29,13 +29,15 @@
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
-    "build": "bun build src/index.ts --outfile dist/index.js --target node --packages external",
+    "build": "pnpm run build:script && pnpm run build:binary",
+    "build:binary": "bun build src/index.ts --compile --outfile dist/instl",
+    "build:script": "bun build src/index.ts --outfile dist/index.js --target node --packages external",
     "dev": "bun src/index.ts",
+    "fix": "pnpm run fix:biome",
+    "fix:biome": "biome check --write .",
     "lint": "pnpm run lint:biome && pnpm run lint:tsc",
     "lint:biome": "biome check .",
     "lint:tsc": "tsc",
-    "fix": "pnpm run fix:biome",
-    "fix:biome": "biome check --write .",
     "test": "pnpm run test:node && pnpm run test:bun",
     "test:bun": "bun test test/e2e/*.test.ts",
     "test:node": "node --test --test-timeout=30000 --import tsx test/e2e/*.test.ts"
