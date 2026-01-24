@@ -16,8 +16,8 @@ export function parseRecipeContent(content: string): RecipeEntry[] {
   const lines = content.split('\n');
   const entries: RecipeEntry[] = [];
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
+  for (const [i, rawLine] of lines.entries()) {
+    const line = rawLine.trim();
     const lineNumber = i + 1;
 
     // Skip empty lines
