@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert/strict';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
@@ -34,9 +35,9 @@ op:mkdir\tdest:${tempDir}/dir2
 `);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(0);
-      expect(isDirectory(path.join(tempDir, 'dir1'))).toBe(true);
-      expect(isDirectory(path.join(tempDir, 'dir2'))).toBe(true);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isDirectory(path.join(tempDir, 'dir1')), true);
+      assert.strictEqual(isDirectory(path.join(tempDir, 'dir2')), true);
     });
 
     it('should skip comment lines', () => {
@@ -47,35 +48,35 @@ op:mkdir\tdest:${tempDir}/dir2
 `);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(0);
-      expect(isDirectory(path.join(tempDir, 'dir1'))).toBe(true);
-      expect(isDirectory(path.join(tempDir, 'dir2'))).toBe(true);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isDirectory(path.join(tempDir, 'dir1')), true);
+      assert.strictEqual(isDirectory(path.join(tempDir, 'dir2')), true);
     });
 
     it('should fail with unknown operation', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:unknown\tdest:${tempDir}/file`);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
 
     it('should fail when recipe file does not exist', () => {
       const result = runInstl(`sync ${tempDir}/nonexistent.ltsv`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
 
     it('should fail when dest is missing', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:mkdir`);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
 
     it('should fail when cp is missing src', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:cp\tdest:${tempDir}/dest.txt`);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
   });
 
@@ -84,16 +85,16 @@ op:mkdir\tdest:${tempDir}/dir2
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:touch\tdest:${tempDir}/newfile.txt`);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(path.join(tempDir, 'newfile.txt'))).toBe(true);
-      expect(readFile(path.join(tempDir, 'newfile.txt'))).toBe('');
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(path.join(tempDir, 'newfile.txt')), true);
+      assert.strictEqual(readFile(path.join(tempDir, 'newfile.txt')), '');
     });
 
     it('should set mode for new file', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:touch\tdest:${tempDir}/newfile.txt\tmode:0600`);
 
       runInstl(`sync ${recipe}`);
-      expect(getFileMode(path.join(tempDir, 'newfile.txt'))).toBe(0o600);
+      assert.strictEqual(getFileMode(path.join(tempDir, 'newfile.txt')), 0o600);
     });
 
     it('should update timestamp of existing file', () => {
@@ -106,15 +107,15 @@ op:mkdir\tdest:${tempDir}/dir2
       runInstl(`sync ${recipe}`);
 
       const newStat = fs.statSync(existingFile);
-      expect(newStat.mtime.getTime()).toBeGreaterThanOrEqual(oldStat.mtime.getTime());
-      expect(readFile(existingFile)).toBe('content'); // Content preserved
+      assert.ok(newStat.mtime.getTime() >= oldStat.mtime.getTime());
+      assert.strictEqual(readFile(existingFile), 'content'); // Content preserved
     });
 
     it('should create parent directories', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:touch\tdest:${tempDir}/a/b/c/file.txt`);
 
       runInstl(`sync ${recipe}`);
-      expect(fileExists(path.join(tempDir, 'a/b/c/file.txt'))).toBe(true);
+      assert.strictEqual(fileExists(path.join(tempDir, 'a/b/c/file.txt')), true);
     });
   });
 
@@ -123,29 +124,29 @@ op:mkdir\tdest:${tempDir}/dir2
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:mkdir\tdest:${tempDir}/newdir`);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(0);
-      expect(isDirectory(path.join(tempDir, 'newdir'))).toBe(true);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isDirectory(path.join(tempDir, 'newdir')), true);
     });
 
     it('should create nested directories', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:mkdir\tdest:${tempDir}/a/b/c`);
 
       runInstl(`sync ${recipe}`);
-      expect(isDirectory(path.join(tempDir, 'a/b/c'))).toBe(true);
+      assert.strictEqual(isDirectory(path.join(tempDir, 'a/b/c')), true);
     });
 
     it('should set directory mode', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:mkdir\tdest:${tempDir}/newdir\tmode:0700`);
 
       runInstl(`sync ${recipe}`);
-      expect(getFileMode(path.join(tempDir, 'newdir'))).toBe(0o700);
+      assert.strictEqual(getFileMode(path.join(tempDir, 'newdir')), 0o700);
     });
 
     it('should default to mode 755', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:mkdir\tdest:${tempDir}/newdir`);
 
       runInstl(`sync ${recipe}`);
-      expect(getFileMode(path.join(tempDir, 'newdir'))).toBe(0o755);
+      assert.strictEqual(getFileMode(path.join(tempDir, 'newdir')), 0o755);
     });
   });
 
@@ -155,8 +156,8 @@ op:mkdir\tdest:${tempDir}/dir2
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:cp\tsrc:${src}\tdest:${tempDir}/dest.txt`);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(0);
-      expect(readFile(path.join(tempDir, 'dest.txt'))).toBe('hello');
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(readFile(path.join(tempDir, 'dest.txt')), 'hello');
     });
 
     it('should set file mode', () => {
@@ -164,7 +165,7 @@ op:mkdir\tdest:${tempDir}/dir2
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:cp\tsrc:${src}\tdest:${tempDir}/dest.txt\tmode:0600`);
 
       runInstl(`sync ${recipe}`);
-      expect(getFileMode(path.join(tempDir, 'dest.txt'))).toBe(0o600);
+      assert.strictEqual(getFileMode(path.join(tempDir, 'dest.txt')), 0o600);
     });
 
     it('should resolve relative paths from recipe directory', () => {
@@ -174,7 +175,7 @@ op:mkdir\tdest:${tempDir}/dir2
       const recipe = createTestFile(tempDir, 'recipes/recipe.ltsv', `op:cp\tsrc:../src/source.txt\tdest:${tempDir}/dest.txt`);
 
       runInstl(`sync ${recipe}`);
-      expect(readFile(path.join(tempDir, 'dest.txt'))).toBe('content');
+      assert.strictEqual(readFile(path.join(tempDir, 'dest.txt')), 'content');
     });
   });
 
@@ -184,9 +185,9 @@ op:mkdir\tdest:${tempDir}/dir2
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:ln\tsrc:${src}\tdest:${tempDir}/link`);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(0);
-      expect(isSymlink(path.join(tempDir, 'link'))).toBe(true);
-      expect(getSymlinkTarget(path.join(tempDir, 'link'))).toBe(src);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isSymlink(path.join(tempDir, 'link')), true);
+      assert.strictEqual(getSymlinkTarget(path.join(tempDir, 'link')), src);
     });
 
     it('should replace existing symlink', () => {
@@ -198,7 +199,7 @@ op:mkdir\tdest:${tempDir}/dir2
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:ln\tsrc:${src2}\tdest:${linkPath}`);
 
       runInstl(`sync ${recipe}`);
-      expect(getSymlinkTarget(linkPath)).toBe(src2);
+      assert.strictEqual(getSymlinkTarget(linkPath), src2);
     });
   });
 
@@ -219,7 +220,7 @@ op:mkdir\tdest:${tempDir}/dir2
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:touch\tdest:$INSTL_TEST_DIR/expanded.txt`);
 
       runInstl(`sync ${recipe}`);
-      expect(fileExists(path.join(testDir, 'expanded.txt'))).toBe(true);
+      assert.strictEqual(fileExists(path.join(testDir, 'expanded.txt')), true);
 
       delete process.env['INSTL_TEST_DIR'];
     });
@@ -231,16 +232,16 @@ op:mkdir\tdest:${tempDir}/dir2
 op:touch\tdest:${tempDir}/newfile.txt`);
 
       const result = runInstl(`sync --dry-run ${recipe}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(path.join(tempDir, 'newdir'))).toBe(false);
-      expect(fileExists(path.join(tempDir, 'newfile.txt'))).toBe(false);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(path.join(tempDir, 'newdir')), false);
+      assert.strictEqual(fileExists(path.join(tempDir, 'newfile.txt')), false);
     });
 
     it('should show output in dry-run mode', () => {
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:mkdir\tdest:${tempDir}/newdir`);
 
       const result = runInstl(`sync --dry-run ${recipe}`);
-      expect(result.stdout).toContain('[DRY-RUN]');
+      assert.ok(result.stdout.includes('[DRY-RUN]'));
     });
   });
 
@@ -249,8 +250,8 @@ op:touch\tdest:${tempDir}/newfile.txt`);
       const recipe = createTestFile(tempDir, 'recipe.ltsv', `op:mkdir\tdest:${tempDir}/newdir`);
 
       const result = runInstl(`sync --verbose ${recipe}`);
-      expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('[MKDIR]');
+      assert.strictEqual(result.exitCode, 0);
+      assert.ok(result.stdout.includes('[MKDIR]'));
     });
   });
 
@@ -272,21 +273,21 @@ op:touch\tdest:${tempDir}/data/state\tmode:0600
 `);
 
       const result = runInstl(`sync ${recipe}`);
-      expect(result.exitCode).toBe(0);
+      assert.strictEqual(result.exitCode, 0);
 
-      expect(isDirectory(path.join(tempDir, 'config'))).toBe(true);
-      expect(getFileMode(path.join(tempDir, 'config'))).toBe(0o755);
+      assert.strictEqual(isDirectory(path.join(tempDir, 'config')), true);
+      assert.strictEqual(getFileMode(path.join(tempDir, 'config')), 0o755);
 
-      expect(isDirectory(path.join(tempDir, 'data'))).toBe(true);
-      expect(getFileMode(path.join(tempDir, 'data'))).toBe(0o700);
+      assert.strictEqual(isDirectory(path.join(tempDir, 'data')), true);
+      assert.strictEqual(getFileMode(path.join(tempDir, 'data')), 0o700);
 
-      expect(readFile(path.join(tempDir, 'config/app.conf'))).toBe('content');
-      expect(getFileMode(path.join(tempDir, 'config/app.conf'))).toBe(0o644);
+      assert.strictEqual(readFile(path.join(tempDir, 'config/app.conf')), 'content');
+      assert.strictEqual(getFileMode(path.join(tempDir, 'config/app.conf')), 0o644);
 
-      expect(isSymlink(path.join(tempDir, 'data/app.conf.link'))).toBe(true);
+      assert.strictEqual(isSymlink(path.join(tempDir, 'data/app.conf.link')), true);
 
-      expect(fileExists(path.join(tempDir, 'data/state'))).toBe(true);
-      expect(getFileMode(path.join(tempDir, 'data/state'))).toBe(0o600);
+      assert.strictEqual(fileExists(path.join(tempDir, 'data/state')), true);
+      assert.strictEqual(getFileMode(path.join(tempDir, 'data/state')), 0o600);
     });
   });
 });

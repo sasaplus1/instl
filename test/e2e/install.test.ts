@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert/strict';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
@@ -31,9 +32,9 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'dest.txt');
 
       const result = runInstl(`install ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(dest)).toBe(true);
-      expect(readFile(dest)).toBe('hello world');
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(dest), true);
+      assert.strictEqual(readFile(dest), 'hello world');
     });
 
     it('should copy a single file to a directory', () => {
@@ -42,8 +43,8 @@ describe('instl install', () => {
       fs.mkdirSync(destDir);
 
       const result = runInstl(`install ${src} ${destDir}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(path.join(destDir, 'source.txt'))).toBe(true);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(path.join(destDir, 'source.txt')), true);
     });
 
     it('should copy multiple files to a directory', () => {
@@ -53,9 +54,9 @@ describe('instl install', () => {
       fs.mkdirSync(destDir);
 
       const result = runInstl(`install ${src1} ${src2} ${destDir}`);
-      expect(result.exitCode).toBe(0);
-      expect(readFile(path.join(destDir, 'file1.txt'))).toBe('one');
-      expect(readFile(path.join(destDir, 'file2.txt'))).toBe('two');
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(readFile(path.join(destDir, 'file1.txt')), 'one');
+      assert.strictEqual(readFile(path.join(destDir, 'file2.txt')), 'two');
     });
 
     it('should fail when copying multiple files to non-directory', () => {
@@ -64,7 +65,7 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'notexist');
 
       const result = runInstl(`install ${src1} ${src2} ${dest}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
 
     it('should fail when source does not exist', () => {
@@ -72,7 +73,7 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'dest.txt');
 
       const result = runInstl(`install ${src} ${dest}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
   });
 
@@ -82,7 +83,7 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'dest.txt');
 
       runInstl(`install -m 600 ${src} ${dest}`);
-      expect(getFileMode(dest)).toBe(0o600);
+      assert.strictEqual(getFileMode(dest), 0o600);
     });
 
     it('should set file mode with -m option (4 digit)', () => {
@@ -90,7 +91,7 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'dest.txt');
 
       runInstl(`install -m 0755 ${src} ${dest}`);
-      expect(getFileMode(dest)).toBe(0o755);
+      assert.strictEqual(getFileMode(dest), 0o755);
     });
 
     it('should default to 644 for files', () => {
@@ -98,7 +99,7 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'dest.txt');
 
       runInstl(`install ${src} ${dest}`);
-      expect(getFileMode(dest)).toBe(0o644);
+      assert.strictEqual(getFileMode(dest), 0o644);
     });
   });
 
@@ -107,8 +108,8 @@ describe('instl install', () => {
       const dir = path.join(tempDir, 'newdir');
 
       const result = runInstl(`install -d ${dir}`);
-      expect(result.exitCode).toBe(0);
-      expect(isDirectory(dir)).toBe(true);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isDirectory(dir), true);
     });
 
     it('should create multiple directories', () => {
@@ -116,43 +117,43 @@ describe('instl install', () => {
       const dir2 = path.join(tempDir, 'dir2');
 
       const result = runInstl(`install -d ${dir1} ${dir2}`);
-      expect(result.exitCode).toBe(0);
-      expect(isDirectory(dir1)).toBe(true);
-      expect(isDirectory(dir2)).toBe(true);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isDirectory(dir1), true);
+      assert.strictEqual(isDirectory(dir2), true);
     });
 
     it('should create nested directories', () => {
       const dir = path.join(tempDir, 'a/b/c');
 
       const result = runInstl(`install -d ${dir}`);
-      expect(result.exitCode).toBe(0);
-      expect(isDirectory(dir)).toBe(true);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isDirectory(dir), true);
     });
 
     it('should set directory mode with -m option', () => {
       const dir = path.join(tempDir, 'newdir');
 
       runInstl(`install -d -m 700 ${dir}`);
-      expect(getFileMode(dir)).toBe(0o700);
+      assert.strictEqual(getFileMode(dir), 0o700);
     });
 
     it('should default to 755 for directories', () => {
       const dir = path.join(tempDir, 'newdir');
 
       runInstl(`install -d ${dir}`);
-      expect(getFileMode(dir)).toBe(0o755);
+      assert.strictEqual(getFileMode(dir), 0o755);
     });
 
     it('should fail when combining -d with -b', () => {
       const dir = path.join(tempDir, 'newdir');
       const result = runInstl(`install -d -b ${dir}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
 
     it('should fail when combining -d with -l', () => {
       const dir = path.join(tempDir, 'newdir');
       const result = runInstl(`install -d -l ${dir}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
   });
 
@@ -162,9 +163,9 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'link');
 
       const result = runInstl(`install -l ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(isSymlink(dest)).toBe(true);
-      expect(getSymlinkTarget(dest)).toBe(src);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isSymlink(dest), true);
+      assert.strictEqual(getSymlinkTarget(dest), src);
     });
 
     it('should replace existing file with symlink', () => {
@@ -172,8 +173,8 @@ describe('instl install', () => {
       const dest = createTestFile(tempDir, 'existing.txt', 'old');
 
       const result = runInstl(`install -l ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(isSymlink(dest)).toBe(true);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(isSymlink(dest), true);
     });
 
     it('should replace existing symlink', () => {
@@ -183,8 +184,8 @@ describe('instl install', () => {
       fs.symlinkSync(src1, dest);
 
       const result = runInstl(`install -l ${src2} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(getSymlinkTarget(dest)).toBe(src2);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(getSymlinkTarget(dest), src2);
     });
 
     it('should fail when dest is a directory', () => {
@@ -193,7 +194,7 @@ describe('instl install', () => {
       fs.mkdirSync(dest);
 
       const result = runInstl(`install -l ${src} ${dest}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
 
     it('should fail with multiple sources', () => {
@@ -202,14 +203,14 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'link');
 
       const result = runInstl(`install -l ${src1} ${src2} ${dest}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
 
     it('should fail when combining -l with -b', () => {
       const src = createTestFile(tempDir, 'source.txt', 'content');
       const dest = path.join(tempDir, 'link');
       const result = runInstl(`install -l -b ${src} ${dest}`);
-      expect(result.exitCode).toBe(1);
+      assert.strictEqual(result.exitCode, 1);
     });
   });
 
@@ -220,10 +221,10 @@ describe('instl install', () => {
       const backupPath = dest + '.old';
 
       const result = runInstl(`install -b ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(backupPath)).toBe(true);
-      expect(readFile(backupPath)).toBe('old content');
-      expect(readFile(dest)).toBe('new content');
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(backupPath), true);
+      assert.strictEqual(readFile(backupPath), 'old content');
+      assert.strictEqual(readFile(dest), 'new content');
     });
 
     it('should not create backup when dest does not exist', () => {
@@ -232,9 +233,9 @@ describe('instl install', () => {
       const backupPath = dest + '.old';
 
       const result = runInstl(`install -b ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(backupPath)).toBe(false);
-      expect(readFile(dest)).toBe('content');
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(backupPath), false);
+      assert.strictEqual(readFile(dest), 'content');
     });
 
     it('should overwrite existing .old file', () => {
@@ -244,9 +245,9 @@ describe('instl install', () => {
       createTestFile(tempDir, 'dest.txt.old', 'oldest');
 
       const result = runInstl(`install -b ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(readFile(backupPath)).toBe('current');
-      expect(readFile(dest)).toBe('newest');
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(readFile(backupPath), 'current');
+      assert.strictEqual(readFile(dest), 'newest');
     });
   });
 
@@ -256,16 +257,16 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'dest.txt');
 
       const result = runInstl(`install --dry-run ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(dest)).toBe(false);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(dest), false);
     });
 
     it('should not create directory in dry-run mode', () => {
       const dir = path.join(tempDir, 'newdir');
 
       const result = runInstl(`install -d --dry-run ${dir}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(dir)).toBe(false);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(dir), false);
     });
 
     it('should not create symlink in dry-run mode', () => {
@@ -273,8 +274,8 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'link');
 
       const result = runInstl(`install -l --dry-run ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(fileExists(dest)).toBe(false);
+      assert.strictEqual(result.exitCode, 0);
+      assert.strictEqual(fileExists(dest), false);
     });
   });
 
@@ -284,8 +285,8 @@ describe('instl install', () => {
       const dest = path.join(tempDir, 'dest.txt');
 
       const result = runInstl(`install --verbose ${src} ${dest}`);
-      expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('[COPY]');
+      assert.strictEqual(result.exitCode, 0);
+      assert.ok(result.stdout.includes('[COPY]'));
     });
   });
 });
