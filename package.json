@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^12.1.0",
-    "ltsv": "^1.0.1"
+    "ltsv": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.17.14",
