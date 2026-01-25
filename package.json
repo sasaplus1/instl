@@ -1,7 +1,7 @@
 {
   "name": "@sasaplus1/instl",
   "description": "A CLI tool for installing files with LTSV recipe support",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "sasa+1 <sasaplus1@gmail.com>",
   "bin": {
     "instl": "dist/index.js"
