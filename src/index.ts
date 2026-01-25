@@ -3,4 +3,4 @@
 import { createProgram } from "./cli/index.js";
 
 const program = createProgram();
-program.parse();
+program.parse(process.argv);
