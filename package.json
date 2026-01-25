@@ -1,7 +1,7 @@
 {
   "name": "instl",
   "description": "A CLI tool for installing files with LTSV recipe support",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "sasa+1 <sasaplus1@gmail.com>",
   "bin": {
     "instl": "dist/index.js"
