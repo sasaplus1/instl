@@ -1,6 +1,5 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import type { Command } from "commander";
 import { copyFile, createSymlink, makeDirectory } from "../core/operations.js";
 import type { InstallOptions } from "../types/index.js";
 import { createLogger } from "../utils/logger.js";
@@ -11,26 +10,7 @@ import {
   validateUid,
 } from "../utils/validation.js";
 
-export function registerInstallCommand(program: Command): void {
-  program
-    .command("install")
-    .description("Install files or directories")
-    .argument(
-      "<sources...>",
-      "Source files or directories (last argument is DEST unless -d is used)",
-    )
-    .option("-m, --mode <mode>", "Set permission mode (octal: 644, 0644, 1755)")
-    .option("-o, --owner <uid>", "Set owner UID")
-    .option("-g, --group <gid>", "Set group GID")
-    .option("-d, --directory", "Create directories (mkdir -p equivalent)")
-    .option("-b, --backup", "Create backup of existing files (.old extension)")
-    .option("-l, --symlink", "Create symbolic link instead of copy")
-    .option("--verbose", "Enable verbose output")
-    .option("--dry-run", "Show what would be done without executing")
-    .action(executeInstall);
-}
-
-interface InstallCliOptions {
+export interface InstallCliOptions {
   mode?: string;
   owner?: string;
   group?: string;
@@ -41,7 +21,10 @@ interface InstallCliOptions {
   dryRun?: boolean;
 }
 
-function executeInstall(args: string[], cliOptions: InstallCliOptions): void {
+export function executeInstall(
+  args: string[],
+  cliOptions: InstallCliOptions,
+): void {
   try {
     const options: InstallOptions = {
       directory: cliOptions.directory ?? false,

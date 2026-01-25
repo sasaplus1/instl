@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { registerInstallCommand } from "./install.js";
+import { executeInstall, type InstallCliOptions } from "./install.js";
 import { registerSyncCommand } from "./sync.js";
 
 export function createProgram(): Command {
@@ -8,9 +8,29 @@ export function createProgram(): Command {
   program
     .name("instl")
     .description("A CLI tool for installing files with LTSV recipe support")
-    .version("1.0.0");
+    .helpCommand(false)
+    .enablePositionalOptions()
+    .argument(
+      "[sources...]",
+      "Source files or directories (last argument is DEST unless -d is used)",
+    )
+    .option("-m, --mode <mode>", "Set permission mode (octal: 644, 0644, 1755)")
+    .option("-o, --owner <uid>", "Set owner UID")
+    .option("-g, --group <gid>", "Set group GID")
+    .option("-d, --directory", "Create directories (mkdir -p equivalent)")
+    .option("-b, --backup", "Create backup of existing files (.old extension)")
+    .option("-l, --symlink", "Create symbolic link instead of copy")
+    .option("-v, --verbose", "Enable verbose output")
+    .option("--dry-run", "Show what would be done without executing")
+    .version("1.0.0")
+    .action((sources: string[], options: InstallCliOptions) => {
+      if (sources.length === 0) {
+        program.help();
+        return;
+      }
+      executeInstall(sources, options);
+    });
 
-  registerInstallCommand(program);
   registerSyncCommand(program);
 
   return program;

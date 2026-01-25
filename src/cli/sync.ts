@@ -10,7 +10,7 @@ export function registerSyncCommand(program: Command): void {
     .command("sync")
     .description("Synchronize files according to LTSV recipe file")
     .argument("<recipe>", "Path to LTSV recipe file")
-    .option("--verbose", "Enable verbose output")
+    .option("-v, --verbose", "Enable verbose output")
     .option("--dry-run", "Show what would be done without executing")
     .action(executeSync);
 }
