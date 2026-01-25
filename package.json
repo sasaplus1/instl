@@ -34,6 +34,10 @@
   "scripts": {
     "build": "pnpm run build:script && pnpm run build:binary",
     "build:binary": "bun build src/index.ts --compile --outfile dist/instl",
+    "build:binary:linux-x64": "bun build src/index.ts --compile --target=bun-linux-x64 --outfile dist/instl",
+    "build:binary:linux-arm64": "bun build src/index.ts --compile --target=bun-linux-arm64 --outfile dist/instl",
+    "build:binary:darwin-x64": "bun build src/index.ts --compile --target=bun-darwin-x64 --outfile dist/instl",
+    "build:binary:darwin-arm64": "bun build src/index.ts --compile --target=bun-darwin-arm64 --outfile dist/instl",
     "build:script": "bun build src/index.ts --outfile dist/index.js --target node --packages external",
     "dev": "bun src/index.ts",
     "fix": "pnpm run fix:biome",
