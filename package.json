@@ -29,6 +29,10 @@
   ],
   "license": "MIT",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sasaplus1/instl.git"
+  },
   "scripts": {
     "build": "pnpm run build:script && pnpm run build:binary",
     "build:binary": "bun build src/index.ts --compile --outfile dist/instl",
