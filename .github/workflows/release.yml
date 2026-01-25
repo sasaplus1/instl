@@ -31,16 +31,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             target: linux-x64
             archive-name: instl-linux-x64
-          - os: ubuntu-22.04-arm64
+          - os: ubuntu-24.04-arm64
             target: linux-arm64
             archive-name: instl-linux-arm64
-          - os: macos-latest
+          - os: macos-15
             target: darwin-arm64
             archive-name: instl-darwin-arm64
-          - os: macos-13
+          - os: macos-15-intel
             target: darwin-x64
             archive-name: instl-darwin-x64
     runs-on: ${{ matrix.os }}
@@ -110,7 +110,7 @@ jobs:
             cp "$dir"* release-assets/
           done
           cd release-assets
-          sha256sum *.tar.gz > checksums.txt
+          sha256sum ./*.tar.gz > checksums.txt
       - run: gh release create '${{ github.ref_name }}' --title '${{ github.ref_name }}' --generate-notes release-assets/*
         env:
           GH_PROMPT_DISABLED: 1
