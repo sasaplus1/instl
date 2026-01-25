@@ -22,7 +22,7 @@ export function createProgram(): Command {
     .option("-l, --symlink", "Create symbolic link instead of copy")
     .option("-v, --verbose", "Enable verbose output")
     .option("--dry-run", "Show what would be done without executing")
-    .version("1.0.0")
+    .version(typeof __VERSION__ !== "undefined" ? __VERSION__ : "0.0.0-dev")
     .action((sources: string[], options: InstallCliOptions) => {
       if (sources.length === 0) {
         program.help();
