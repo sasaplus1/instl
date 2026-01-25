@@ -9,6 +9,7 @@ export function createProgram(): Command {
     .name("instl")
     .description("A CLI tool for installing files with LTSV recipe support")
     .helpCommand(false)
+    .enablePositionalOptions()
     .argument(
       "[sources...]",
       "Source files or directories (last argument is DEST unless -d is used)",
