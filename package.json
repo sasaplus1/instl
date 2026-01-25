@@ -1,5 +1,5 @@
 {
-  "name": "instl",
+  "name": "@sasaplus1/instl",
   "description": "A CLI tool for installing files with LTSV recipe support",
   "version": "0.1.0",
   "author": "sasa+1 <sasaplus1@gmail.com>",
@@ -39,7 +39,7 @@
     "fix": "pnpm run fix:biome",
     "fix:biome": "biome check --write .",
     "generate": "pnpm run generate:licenses",
-    "generate:licenses": "license-checker-rseidelsohn --production --plainVertical --excludePackages instl --out dist/THIRD_PARTY_LICENSES.txt",
+    "generate:licenses": "license-checker-rseidelsohn --production --plainVertical --excludePackages @sasaplus1/instl --out dist/THIRD_PARTY_LICENSES.txt",
     "lint": "pnpm run lint:biome && pnpm run lint:tsc",
     "lint:biome": "biome check .",
     "lint:tsc": "tsc",
