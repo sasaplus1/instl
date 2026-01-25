@@ -36,7 +36,7 @@ curl -fsSL https://github.com/sasaplus1/instl/releases/latest/download/instl-dar
 ### npm
 
 ```sh
-npm install -g instl
+npm install -g @sasaplus1/instl
 ```
 
 - Requires: Node.js 24 or later
