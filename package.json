@@ -1,7 +1,7 @@
 {
   "name": "instl",
   "description": "A CLI tool for installing files with LTSV recipe support",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "sasa+1 <sasaplus1@gmail.com>",
   "bin": {
     "instl": "dist/index.js"
@@ -29,15 +29,19 @@
   ],
   "license": "MIT",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sasaplus1/instl.git"
+  },
   "scripts": {
     "build": "pnpm run build:script && pnpm run build:binary",
     "build:binary": "bun build src/index.ts --compile --outfile dist/instl",
     "build:script": "bun build src/index.ts --outfile dist/index.js --target node --packages external",
     "dev": "bun src/index.ts",
-    "generate": "pnpm run generate:licenses",
-    "generate:licenses": "license-checker-rseidelsohn --production --plainVertical --excludePackages instl --out dist/THIRD_PARTY_LICENSES.txt",
     "fix": "pnpm run fix:biome",
     "fix:biome": "biome check --write .",
+    "generate": "pnpm run generate:licenses",
+    "generate:licenses": "license-checker-rseidelsohn --production --plainVertical --excludePackages instl --out dist/THIRD_PARTY_LICENSES.txt",
     "lint": "pnpm run lint:biome && pnpm run lint:tsc",
     "lint:biome": "biome check .",
     "lint:tsc": "tsc",
