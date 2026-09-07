@@ -7,7 +7,7 @@
     "instl": "dist/index.js"
   },
   "dependencies": {
-    "commander": "12.1.0",
+    "commander": "13.1.0",
     "ltsv": "3.0.2"
   },
   "devDependencies": {
